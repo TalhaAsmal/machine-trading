@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from os import path
 import datetime
+import numpy as np
 from common import data_dir, get_bollinger_bands, plot_data, get_daily_returns
 
 
@@ -29,7 +30,9 @@ def stat_analysis(start_date, end_date, stocks=None):
     if stocks is not None:
         df = df.ix[:, stocks]
 
-    create_histograms(df, 20)
+    daily_returns = get_daily_returns(df)
+    beta_XOM, alpha_XOM = create_scatter_plot(daily_returns, "SPY", "XOM")
+    beta_GLD, alpha_GLD = create_scatter_plot(daily_returns, "SPY", "GLD")
 
 
 def create_histograms(df, bins):
@@ -52,7 +55,14 @@ def create_histograms(df, bins):
     plt.show()
 
 
+def create_scatter_plot(daily_returns, x_axis, y_axis):
+    daily_returns.plot(kind="scatter", x=x_axis, y=y_axis)
+    beta, alpha = np.polyfit(daily_returns[x_axis], daily_returns[y_axis], 1)
+    plt.plot(daily_returns[x_axis], beta * daily_returns[x_axis] + alpha, '-', color='r')
+    plt.show()
+    return beta, alpha
+
 
 start = datetime.date(2009, 1, 1)
 end = datetime.date.today()
-stat_analysis(start, end, ["SPY"])
+stat_analysis(start, end, ["SPY", "XOM", "GLD"])
