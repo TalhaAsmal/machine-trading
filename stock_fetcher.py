@@ -36,5 +36,5 @@ def combine_stocks(stocks, col_to_keep, start_date, end_date):
 start = datetime.date(2000, 1, 1)
 end = datetime.date.today()
 
-stocks = ["SPY", "AAPL", "GOOGL", "YHOO", "MSFT", "IBM", "FB", "TWTR", "GOOG", "GLD"]
+stocks = ["SPY", "AAPL", "GOOGL", "YHOO", "MSFT", "IBM", "FB", "TWTR", "GOOG", "GLD", "XOM"]
 combine_stocks(stocks, "Adj Close", start, end)
