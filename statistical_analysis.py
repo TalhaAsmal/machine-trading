@@ -23,21 +23,36 @@ def bollinger_bands(df):
     plt.show()
 
 
-def daily_returns(df):
-    dr = get_daily_returns(df)
-    plot_data(dr, "Daily returns", "Date", "Returns (%)")
-
-
 def stat_analysis(start_date, end_date, stocks=None):
     df = pd.read_csv(path.join(data_dir, "combined.csv"), index_col='Date', parse_dates=True, na_values=['nan'])
     df = df.ix[start_date:end_date]
     if stocks is not None:
         df = df.ix[:, stocks]
 
-    daily_returns(df)
+    create_histograms(df, 20)
+
+
+def create_histograms(df, bins):
+    # Get daily returns
+    daily_returns = get_daily_returns(df)
+    # Plot histogram
+    daily_returns.hist(bins=bins)
+
+    # Calculate and plot mean and std. deviation
+    mean = daily_returns.SPY.mean()
+    std_dev = daily_returns.SPY.std()
+    print("Mean: {}\nStd. Dev: {}".format(mean, std_dev))
+
+    plt.axvline(mean, color='w', linestyle='dashed', linewidth=2)
+    plt.axvline(std_dev, color='r', linestyle='dashed', linewidth=2)
+    plt.axvline(-std_dev, color='r', linestyle='dashed', linewidth=2)
+
+    # Calculate kurtosis
+    print("Kurtosis: {}".format(daily_returns.kurtosis()))
+    plt.show()
 
 
 
-start = datetime.date(2016, 1, 1)
+start = datetime.date(2009, 1, 1)
 end = datetime.date.today()
-stat_analysis(start, end, ["SPY", "GLD"])
+stat_analysis(start, end, ["SPY"])
