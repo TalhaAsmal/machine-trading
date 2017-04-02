@@ -24,7 +24,7 @@ def bollinger_bands(df):
     plt.show()
 
 
-def stat_analysis(start_date, end_date, stocks=None):
+def stat_analysis(start_date, end_date, tracking_etf, stocks=None):
     df = pd.read_csv(path.join(data_dir, "combined.csv"), index_col='Date', parse_dates=True, na_values=['nan'])
     df = df.ix[start_date:end_date]
     if stocks is not None:
